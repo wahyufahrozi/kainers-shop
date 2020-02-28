@@ -47,8 +47,8 @@ export default class Directory extends Component {
   render() {
     return (
       <div className="directory-menu">
-        {this.state.storage.map(({ title, imageUrl, id, size }) => (
-          <MenuItem key={id} title={title} imageUrl={imageUrl} size={size} />
+        {this.state.storage.map(({ id, ...etcstorageProps }) => (
+          <MenuItem key={id} {...etcstorageProps} />
         ))}
       </div>
     );

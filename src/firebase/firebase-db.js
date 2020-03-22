@@ -58,6 +58,27 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 //   return await batch.commit();
 // };
 // =================================================================
+
+export const convertCollectionsSnapshotToMap = collections => {
+  const transformedCollection = collections.docs.map(doc => {
+    const { title, items } = doc.data();
+
+    return {
+      routeName: encodeURI(title.toLowerCase()),
+      //encodeURI : convert the string to as a valid uniform resource identifier
+      id: doc.id,
+      title,
+      items
+    };
+  });
+
+  return transformedCollection.reduce((accumulator, collection) => {
+    accumulator[collection.title.toLowerCase()] = collection;
+    return accumulator;
+  }, {});
+  // console.log(transformedCollection);
+};
+
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 

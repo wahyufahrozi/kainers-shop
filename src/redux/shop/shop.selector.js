@@ -26,3 +26,17 @@ export const selectCollection = collectionUrlParam =>
   createSelector([selectCollections], collections =>
     collections ? collections[collectionUrlParam] : null
   );
+
+export const selectIsCollectionFetching = createSelector(
+  [selectShop],
+  shop => shop.isFetching
+);
+
+export const selectIsCollectionLoaded = createSelector(
+  [selectShop],
+  shop => !!shop.collections
+  /*
+  double bang !! Converts Object to boolean. If it was falsey (e.g. 0, null, 
+  undefined, etc.), it will be false, otherwise, true
+  */
+);

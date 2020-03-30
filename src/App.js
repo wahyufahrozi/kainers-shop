@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Homepage from "./pages/homepage/Homepage-component";
 import ShopPage from "./pages/shop/shop-component";
 import SignInAndSignUpPage from "./pages/sign-in-and-sign-up/sign-in-and-sign-up.component";
@@ -25,63 +25,59 @@ import "./App.css";
 //   </div>
 // );
 
-class App extends React.Component {
-  unsubscribeFromAuth = null;
-
-  componentDidMount() {
-    const { checkUserSession } = this.props;
+const App = ({ checkUserSession, currentUser }) => {
+  // unsubscribeFromAuth = null;
+  useEffect(() => {
     checkUserSession();
-    // const { setCurrentUser } = this.props;
-    // const {  collectionArray } = this.props;
-    // this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
-    //   if (userAuth) {
-    //     const userRef = await createUserProfileDocument(userAuth);
-    //     userRef.onSnapshot(snapShot => {
-    //       setCurrentUser({
-    //         id: snapShot.id,
-    //         ...snapShot.data()
-    //       });
-    //       console.log(this.state);
-    //     });
-    //   }
-    // ===============to store data on firestore========================
-    // setCurrentUser(userAuth);
-    // addCollectionAndDocuments(
-    //   "collections",
-    //   collectionArray.map(({ title, items }) => ({ title, items }))
-    // );
-    //==================================================================
-    // });
-  }
+  }, [checkUserSession]);
+  // componentDidMount() {
+  //   const { checkUserSession } = this.props;
+  //   checkUserSession();
+  // const { setCurrentUser } = this.props;
+  // const {  collectionArray } = this.props;
+  // this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+  //   if (userAuth) {
+  //     const userRef = await createUserProfileDocument(userAuth);
+  //     userRef.onSnapshot(snapShot => {
+  //       setCurrentUser({
+  //         id: snapShot.id,
+  //         ...snapShot.data()
+  //       });
+  //       console.log(this.state);
+  //     });
+  //   }
+  // ===============to store data on firestore========================
+  // setCurrentUser(userAuth);
+  // addCollectionAndDocuments(
+  //   "collections",
+  //   collectionArray.map(({ title, items }) => ({ title, items }))
+  // );
+  //==================================================================
+  // });
+  // }
 
-  componentWillUnmount() {
-    this.unsubscribeFromAuth();
-  }
+  // componentWillUnmount() {
+  //   this.unsubscribeFromAuth();
+  // }
 
-  render() {
-    return (
-      <div>
-        <Header />
-        <Switch>
-          <Route exact path="/" component={Homepage} />
-          <Route path="/shop" component={ShopPage} />
-          <Route exact path="/checkout" component={CheckoutPage} />
-          <Route
-            path="/signin"
-            //if user login redirect to homepage
-            render={() =>
-              this.props.currentUser ? (
-                <Redirect to="/" />
-              ) : (
-                <SignInAndSignUpPage />
-              )
-            }
-          />
-        </Switch>
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      <Header />
+      <Switch>
+        <Route exact path="/" component={Homepage} />
+        <Route path="/shop" component={ShopPage} />
+        <Route exact path="/checkout" component={CheckoutPage} />
+        <Route
+          path="/signin"
+          //if user login redirect to homepage
+          render={() =>
+            currentUser ? <Redirect to="/" /> : <SignInAndSignUpPage />
+          }
+        />
+      </Switch>
+    </div>
+  );
+};
 
 const mapStatetoProps = createStructuredSelector({
   currentUser: selectCurrentUser

@@ -39,7 +39,7 @@ const CheckoutPage = ({ cartItems, total }) => (
       : ""}
     {cartItems.length ? (
       <div className="total">
-        <span>Total: Rp {total}</span>
+        <span>Total: $ {total}</span>
       </div>
     ) : (
       ""
@@ -48,7 +48,7 @@ const CheckoutPage = ({ cartItems, total }) => (
       <div className="test-warning">
         *Please use following test credit card for payments*
         <br />
-        4661 6012 2170 0674 - Exp : 06/20 CVV:111
+        4242 4242 4242 4242 - Exp : 06/20 CVV:111
       </div>
     ) : (
       ""

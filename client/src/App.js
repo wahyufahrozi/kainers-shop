@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
-import Homepage from "./pages/homepage/Homepage-component";
-import ShopPage from "./pages/shop/shop-component";
-import SignInAndSignUpPage from "./pages/sign-in-and-sign-up/sign-in-and-sign-up.component";
+import React, { useEffect, lazy, Suspense } from "react";
+
 import Header from "./components/header/header.component";
-import CheckoutPage from "./pages/checkout/checkout-component";
+import Spinner from "./components/spinner/spinner.component";
+import ErrorBoundary from "./components/error-boundary/error-boundary.component";
 /*
 import{  auth,
 createUserProfileDocument
@@ -17,13 +16,22 @@ import { selectCurrentUser } from "./redux/user/user.selector";
 import { createStructuredSelector } from "reselect";
 import { checkUserSession } from "./redux/user/user.actions";
 // import { selectCollectionsForPreview } from "./redux/shop/shop.selector";
-import "./App.css";
+import { GlobalStyle } from "./global.styles";
 
 // const HatsPage = () => (
 //   <div>
 //     <h1>sfsfd</h1>
 //   </div>
 // );
+
+// the benefit use lazy is the browser download what component when they need to be
+const Homepage = lazy(() => import("./pages/homepage/Homepage-component"));
+const ShopPage = lazy(() => import("./pages/shop/shop-component"));
+const CheckoutPage = lazy(() => import("./pages/checkout/checkout-component"));
+const SignInAndSignUpPage = lazy(() =>
+  import("./pages/sign-in-and-sign-up/sign-in-and-sign-up.component")
+);
+// ====================================================================================
 
 const App = ({ checkUserSession, currentUser }) => {
   // unsubscribeFromAuth = null;
@@ -62,28 +70,33 @@ const App = ({ checkUserSession, currentUser }) => {
 
   return (
     <div>
+      <GlobalStyle />
       <Header />
       <Switch>
-        <Route exact path="/" component={Homepage} />
-        <Route path="/shop" component={ShopPage} />
-        <Route exact path="/checkout" component={CheckoutPage} />
-        <Route
-          path="/signin"
-          //if user login redirect to homepage
-          render={() =>
-            currentUser ? <Redirect to="/" /> : <SignInAndSignUpPage />
-          }
-        />
+        <ErrorBoundary>
+          <Suspense fallback={<Spinner />}>
+            <Route exact path="/" component={Homepage} />
+            <Route path="/shop" component={ShopPage} />
+            <Route exact path="/checkout" component={CheckoutPage} />
+            <Route
+              path="/signin"
+              //if user login redirect to homepage
+              render={() =>
+                currentUser ? <Redirect to="/" /> : <SignInAndSignUpPage />
+              }
+            />
+          </Suspense>
+        </ErrorBoundary>
       </Switch>
     </div>
   );
 };
 
 const mapStatetoProps = createStructuredSelector({
-  currentUser: selectCurrentUser
+  currentUser: selectCurrentUser,
   // collectionArray: selectCollectionsForPreview
 });
-const mapDispatchToProps = dispatch => ({
-  checkUserSession: () => dispatch(checkUserSession())
+const mapDispatchToProps = (dispatch) => ({
+  checkUserSession: () => dispatch(checkUserSession()),
 });
 export default connect(mapStatetoProps, mapDispatchToProps)(App);

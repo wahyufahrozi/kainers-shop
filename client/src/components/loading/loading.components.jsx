@@ -1,17 +1,8 @@
 import React from "react";
 
-import { LoadingOverlay, LoadingContainer } from "./loading.styles";
-
-const Loading = WrappedComponent => {
-  const Loading = ({ isLoading, ...otherProps }) => {
-    return isLoading ? (
-      <LoadingOverlay>
-        <LoadingContainer />
-      </LoadingOverlay>
-    ) : (
-      <WrappedComponent {...otherProps} />
-    );
-  };
-  return Loading;
+import Spinner from "../spinner/spinner.component";
+const Loading = (WrappedComponent) => ({ isLoading, ...otherProps }) => {
+  return isLoading ? <Spinner /> : <WrappedComponent {...otherProps} />;
 };
+
 export default Loading;

@@ -5,7 +5,7 @@ import React from "react";
 import {
   CartItemContainer,
   ItemDetailsContainer,
-  CartItemImage
+  CartItemImage,
 } from "./cart-item.styles";
 
 const CartItem = ({ item: { imageUrl, price, name, quantity } }) => (
@@ -19,4 +19,9 @@ const CartItem = ({ item: { imageUrl, price, name, quantity } }) => (
     </ItemDetailsContainer>
   </CartItemContainer>
 );
-export default CartItem;
+export default React.memo(CartItem);
+/*
+react memo where the component will only render again
+if the props or state changes. the same as the shouldcomponentUpdate
+but the component shouldcomponentUpdate be used in the component class
+*/

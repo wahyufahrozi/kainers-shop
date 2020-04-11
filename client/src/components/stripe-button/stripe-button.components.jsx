@@ -6,19 +6,19 @@ const StripeCheckoutButton = ({ price }) => {
   const priceForStripe = price * 100;
   const publishablekey = "pk_test_v7D3PKhJfeUslezwdsDYby5x00zA4zNkbR";
 
-  const onToken = token => {
+  const onToken = (token) => {
     axios({
       url: "payment",
       method: "post",
       data: {
         amount: priceForStripe,
-        token: token
-      }
+        token: token,
+      },
     })
-      .then(response => {
+      .then((response) => {
         alert("succesful payment");
       })
-      .catch(error => {
+      .catch((error) => {
         console.log("Payment Error: ", error);
         alert(
           "There was an issue with your payment! Please make sure you use the provided credit card."

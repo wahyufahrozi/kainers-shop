@@ -10,7 +10,7 @@ const config = {
   storageBucket: "kainers-db.appspot.com",
   messagingSenderId: "644124450337",
   appId: "1:644124450337:web:120620f4db2c54457f0d60",
-  measurementId: "G-ZVWX9F3RHW"
+  measurementId: "G-ZVWX9F3RHW",
 };
 firebase.initializeApp(config);
 
@@ -22,7 +22,9 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
   const snapShot = await userRef.get();
   const collectionSnapshot = await collectionRef.get();
 
-  console.log({ collecntions: collectionSnapshot.docs.map(doc => doc.data()) });
+  console.log({
+    collecntions: collectionSnapshot.docs.map((doc) => doc.data()),
+  });
 
   if (!snapShot.exists) {
     const { displayName, email } = userAuth;
@@ -32,7 +34,7 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
         displayName,
         email,
         createdAt,
-        ...additionalData
+        ...additionalData,
       });
     } catch (error) {
       console.log("error creating user", error.message);
@@ -41,7 +43,18 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 
   return userRef;
 };
+export const getUserCartRef = async (userId) => {
+  const cartsRef = firestore.collection("carts").where("userId", "==", userId);
+  const snapShot = await cartsRef.get();
 
+  if (snapShot.empty) {
+    const cartDocRef = firestore.collection("carts").doc();
+    await cartDocRef.set({ userId, cartItems: [] });
+    return cartDocRef;
+  } else {
+    return snapShot.docs[0].ref;
+  }
+};
 //to add data shop data to firebase
 // export const addCollectionAndDocuments = async (
 //   collectionkey,
@@ -59,8 +72,8 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 // };
 // =================================================================
 
-export const convertCollectionsSnapshotToMap = collections => {
-  const transformedCollection = collections.docs.map(doc => {
+export const convertCollectionsSnapshotToMap = (collections) => {
+  const transformedCollection = collections.docs.map((doc) => {
     const { title, items } = doc.data();
 
     return {
@@ -68,7 +81,7 @@ export const convertCollectionsSnapshotToMap = collections => {
       //encodeURI : convert the string to as a valid uniform resource identifier
       id: doc.id,
       title,
-      items
+      items,
     };
   });
 
@@ -81,7 +94,7 @@ export const convertCollectionsSnapshotToMap = collections => {
 
 export const getCurrentUser = () => {
   return new Promise((resolve, reject) => {
-    const unsubscribe = auth.onAuthStateChanged(userAuth => {
+    const unsubscribe = auth.onAuthStateChanged((userAuth) => {
       unsubscribe();
       resolve(userAuth);
     }, reject);
